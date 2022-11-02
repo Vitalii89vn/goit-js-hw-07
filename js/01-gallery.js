@@ -4,7 +4,7 @@ import { galleryItems } from './gallery-items.js';
 
 const gallery = document.querySelector('.gallery');
 const galleryLink = document.querySelector('.gallery__link');
-const galleryEl = document.querySelector('.gallery__image');
+const galleryEl = document.querySelectorAll('.gallery__image');
 
 const markupGallery = galleryItems.map(({preview, original, description}) => { 
       return `
@@ -21,8 +21,8 @@ const markupGallery = galleryItems.map(({preview, original, description}) => {
     `
 }).join('') 
 gallery.innerHTML = `${markupGallery}`;
-// console.log(markupGallery);
 
+let originalImgUrl = '';
 gallery.addEventListener('click', onClickImg)
 
 function onClickImg(event) {
@@ -32,16 +32,33 @@ function onClickImg(event) {
     if (currentEl.nodeName !== 'IMG') {
         return
     }
-    
-    //  currentEl.dataset.source;
-
+   
+      originalImgUrl = currentEl.dataset.source;
+   
+   
+ console.log(originalImgUrl)
 }
 
-document.querySelector('.gallery__image').onclick = () => {
-
+document.querySelector('.gallery').onclick = () => {
 	basicLightbox.create(`
-		<img width="1280" src="${currentEl.dataset.source}">
+		<img width="1280" src="${originalImgUrl}">
 	`).show()
 
 }
-
+document.addEventListener('keydown', onClose)
+ onClose: (instance) => {
+	// Close when hitting escape.
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		var isEscape = false;
+		if ( "key" in evt ) {
+			isEscape = ( evt.key === "Escape" || evt.key === "Esc" );
+    }
+    // else {
+		// 	isEscape = ( evt.keyCode === 27 );
+		// }
+		if ( isEscape ) {
+			instance.close();
+		}
+	};
+}
